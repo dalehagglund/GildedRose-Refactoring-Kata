@@ -25,13 +25,14 @@ class GildedRose(object):
                     item.quality = 0
                 continue
 
-            if item.name != "Sulfuras, Hand of Ragnaros":
-                self.decrement_quality(item, 1)
-            if item.name != "Sulfuras, Hand of Ragnaros":
-                item.sell_in = item.sell_in - 1
+            if item.name == "Sulfuras, Hand of Ragnaros":
+                # nothing at all
+                continue
+
+            self.decrement_quality(item, 1)
+            item.sell_in -= 1
             if item.sell_in < 0:
-                if item.name != "Sulfuras, Hand of Ragnaros":
-                    self.decrement_quality(item, 1)
+                self.decrement_quality(item, 1)
 
     def increment_quality(self, item, delta):
         if item.quality < 50:

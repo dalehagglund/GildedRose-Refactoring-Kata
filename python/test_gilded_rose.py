@@ -43,9 +43,18 @@ class BasicItemCharacterizationTests(unittest.TestCase):
         g = GildedRose([item])
         g.update_quality()
         self.assertLessEqual(0, item.quality)
-        
-        
 
-        
+    def test_sell_in_drops_by_1(self):
+        item = Item(name="foo", sell_in=20, quality=50)
+        g = GildedRose([item])
+        g.update_quality()
+        self.assertEquals(19, item.sell_in)
+    def test_sell_in_can_go_negative(self):
+        # based on GildedRose test runs.
+        item = Item(name="foo", sell_in=0, quality=50)
+        g = GildedRose([item])
+        g.update_quality()
+        self.assertEquals(-1, item.sell_in)
+       
 if __name__ == '__main__':
     unittest.main()

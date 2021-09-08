@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
+from unittest.case import TestCase
 
 from gilded_rose import Item, GildedRose
 
@@ -27,6 +28,11 @@ class BasicItemCharacterizationTests(unittest.TestCase):
         g = GildedRose([item])
         g.update_quality()
         self.assertEquals(10, item.quality)
+    def test_quality_decreases_if_started_at_50(self):
+        item = Item(name="foo", sell_in=5, quality=50)
+        g = GildedRose([item])
+        g.update_quality()
+        self.assertEquals(49, item.quality)
 
     def test_quality_drops_by_1_after_last_day_to_sell(self):
         item = Item(name="foo", sell_in=1, quality=10)
@@ -55,6 +61,18 @@ class BasicItemCharacterizationTests(unittest.TestCase):
         g = GildedRose([item])
         g.update_quality()
         self.assertEquals(-1, item.sell_in)
+
+class AgedBrieCharacterizationTests(unittest.TestCase):
+    def test_quality_increases_each_day(self):
+        brie = Item(name="Aged Brie", sell_in=2, quality=10)
+        g = GildedRose([brie])
+        g.update_quality()
+        self.assertEquals(11, brie.quality)
+    def test_quality_increases_from_zero(self):
+        brie = Item(name="Aged Brie", sell_in=2, quality=0)
+        g = GildedRose([brie])
+        g.update_quality()
+        self.assertEquals(1, brie.quality)
        
 if __name__ == '__main__':
     unittest.main()

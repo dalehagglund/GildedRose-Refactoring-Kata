@@ -129,6 +129,37 @@ class BackstagePassCharacterizationTests(unittest.TestCase):
                 quality + expected_increment, item.quality,
                 f"{sell_in=} {quality=} {expected_increment=}"
             )
+
+class SulfurasCharacterizationTests(unittest.TestCase):
+    def test_quality_unchanged_when_sell_in_greater_than_0(self):
+        item = Item(
+            name="Sulfuras, Hand of Ragnaros",
+            sell_in=1,
+            quality=20
+        )
+        g = GildedRose([item])
+        g.update_quality()
+        self.assertEqual(20, item.quality)
+    def test_quality_unchanged_when_sell_in_less_than_1(self):
+        item = Item(
+            name="Sulfuras, Hand of Ragnaros",
+            sell_in=0,
+            quality=20
+        )
+        g = GildedRose([item])
+        g.update_quality()
+        self.assertEqual(20, item.quality)
+    def test_sell_in_unchanged(self):
+        item = Item(
+            name="Sulfuras, Hand of Ragnaros",
+            sell_in=10,
+            quality=20
+        )
+        g = GildedRose([item])
+        g.update_quality()
+        self.assertEqual(10, item.sell_in)
+
+
        
 if __name__ == '__main__':
     unittest.main()

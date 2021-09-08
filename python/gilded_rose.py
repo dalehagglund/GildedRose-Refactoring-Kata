@@ -13,11 +13,8 @@ class GildedRose(object):
                 if item.sell_in < 0:
                     self.increment_quality(item, 1)
             elif item.name == "Backstage passes to a TAFKAL80ETC concert":
-                self.increment_quality(item, 1)
-                if item.sell_in < 11:
-                    self.increment_quality(item, 1)
-                if item.sell_in < 6:
-                    self.increment_quality(item, 1)
+                bonus = self.pass_quality_bonus(item)
+                self.increment_quality(item, 1 + bonus)           
                 item.sell_in -= 1
                 if item.sell_in < 0:
                     item.quality = 0
@@ -29,9 +26,16 @@ class GildedRose(object):
                 if item.sell_in < 0:
                     self.decrement_quality(item, 1)
 
+    def pass_quality_bonus(self, item):
+        bonus = 0
+        if item.sell_in < 11:
+            bonus += 1
+        if item.sell_in < 6:
+            bonus += 1
+        return bonus
+
     def increment_quality(self, item, delta):
-        if item.quality < 50:
-            item.quality += delta
+        item.quality = min(50, item.quality + delta)
 
     def decrement_quality(self, item, delta):
         if 0 < item.quality:

@@ -73,6 +73,62 @@ class AgedBrieCharacterizationTests(unittest.TestCase):
         g = GildedRose([brie])
         g.update_quality()
         self.assertEquals(1, brie.quality)
+
+class BackstagePassCharacterizationTests(unittest.TestCase):
+    def make_pass(self, sell_in, quality):
+        return Item(
+            name="Backstage passes to a TAFKAL80ETC concert",
+            sell_in=sell_in,
+            quality=quality,
+        )
+    def test_quality_increases_at_sell_in_boundaries(self):
+        boundaries = [
+            # orig quality, sell_in, expected change in quality
+          
+            # initial quality not near the upper bound
+            (20, 20, +1),       
+            (20, 11, +1),
+            (20, 10, +2),       # +1 quality bonus under 11 days
+            (20, 6,  +2), 
+            (20, 5,  +3),       # another +1 bonus under 6 days
+            (20, 1,  +3),
+
+            # init quality 50 -- no increment or bonuses
+            (50, 20, +0),
+            (50, 10, +0),
+            (50, 5,  +0),
+
+            # init quality 49 -- daily increment, no bonuses
+            (49, 20, +1),
+            (49, 10, +1),
+            (49, 5,  +1),
+
+            # init quality 48 -- daily increment, <11 day bonus
+            (48, 20, +1),
+            (48, 10, +2),
+            (48, 5,  +2),
+
+            # init quality 47 -- daily increment, <11 day and <6 day bonuses
+            (47, 20, +1),
+            (47, 10, +2),
+            (47, 5,  +3),
+
+            # starting from zero
+            (0,  20, +1),
+        ]
+        for quality, sell_in, expected_increment in boundaries:
+            item = Item(
+                name="Backstage passes to a TAFKAL80ETC concert",
+                sell_in=sell_in,
+                quality=quality
+            )
+            item = self.make_pass(sell_in, quality)
+            g = GildedRose([item])
+            g.update_quality()
+            self.assertEquals(
+                quality + expected_increment, item.quality,
+                f"{sell_in=} {quality=} {expected_increment=}"
+            )
        
 if __name__ == '__main__':
     unittest.main()

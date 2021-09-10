@@ -160,6 +160,25 @@ class SulfurasCharacterizationTests(unittest.TestCase):
         self.assertEqual(10, item.sell_in)
 
 
+class ConjuredItemTests(unittest.TestCase):
+    def test_quality_drops_by_2(self):
+        cake = Item(
+            name="Conjured Mana Cake",
+            sell_in=10,
+            quality=20
+        )
+        g = GildedRose([cake])
+        g.update_quality()
+        self.assertEqual(18, cake.quality)
+    def test_quality_drops_by_4_after_sell_by(self):
+        cake = Item(
+            name="Conjured Mana Cake",
+            sell_in=-1,
+            quality=20
+        )
+        g = GildedRose([cake])
+        g.update_quality()
+        self.assertEqual(16, cake.quality)
        
 if __name__ == '__main__':
     unittest.main()

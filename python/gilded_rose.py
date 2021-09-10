@@ -21,10 +21,14 @@ class GildedRose(object):
             elif item.name == "Sulfuras, Hand of Ragnaros":
                 pass
             else:
-                self.decrement_quality(item, 1)
+                if item.name.startswith("Conjured"):   
+                    multiplier = 2
+                else:
+                    multiplier = 1
+                self.decrement_quality(item, 1 * multiplier)
                 item.sell_in -= 1
                 if item.sell_in < 0:
-                    self.decrement_quality(item, 1)
+                    self.decrement_quality(item, 1 * multiplier)
 
     def pass_quality_bonus(self, item):
         bonus = 0
